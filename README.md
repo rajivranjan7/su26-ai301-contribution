@@ -3,7 +3,7 @@
 **Contribution Number:** 1  
 **Student:** Rajiv Ranjan Sahu  
 **Issue:** https://github.com/jenkinsci/jenkins/issues/21944  
-**Status:** Phase I — In Progress
+**Status:** Phase II — In Progress
 
 ---
 
@@ -42,17 +42,23 @@ Occurrences of "slave" and "master" still exist in parts of Jenkins core and its
 
 ### Environment Setup
 
-[To be completed in Phase II]
+No local environment needed for this change. The issue targets user-visible UI text in a .jelly template file. The fix was made entirely via the GitHub web interface as suggested in the issue description.
 
 ### Steps to Reproduce
 
-[To be completed in Phase II]
+1. Navigate to any Jenkins agent's System Information page (e.g. http://<jenkins-url>/computer/<agent-name>/systemInfo)
+2. The page header displays the Remoting version using the deprecated term slaveVersion
+3. Expected: should use agentVersion to match the modern "agent" terminology
+4. Actual: displays ${it.slaveVersion} which is outdated "slave" terminology
+
+### Branch Link:
+https://github.com/rajivranjan7/jenkins/tree/fix-issue-21944-slave-terminology
 
 ### Reproduction Evidence
 
-- **Commit showing reproduction:** [To be added]
-- **Screenshots/logs:** [To be added]
-- **My findings:** [To be added]
+- **Commit showing reproduction:** https://github.com/rajivranjan7/jenkins/commit/fix-issue-21944-slave-terminology
+- **Screenshots/logs:** Change visible in systemInfo.jelly at line 46
+- **My findings:** Confirmed `${it.slaveVersion}` still present in the file before fix; replaced with `${it.agentVersion}`
 
 ---
 
@@ -60,7 +66,10 @@ Occurrences of "slave" and "master" still exist in parts of Jenkins core and its
 
 ### Analysis
 
-[To be completed in Phase II after identifying specific affected files]
+1. Identified `systemInfo.jelly` in `core/src/main/resources/hudson/slaves/SlaveComputer/` as containing deprecated `slaveVersion` reference on line 46
+2. Replaced `${it.slaveVersion}` with `${it.agentVersion}` in the user-visible heading
+3. No public API or persistence model changed — safe trivial change per issue scope rules
+4. Files changed: `core/src/main/resources/hudson/slaves/SlaveComputer/systemInfo.jelly`
 
 ### Proposed Solution
 
@@ -113,6 +122,9 @@ Using UMPIRE framework (adapted):
 ### Week 1 Progress
 
 Selected issue JENKINS-42816. Confirmed it is an active, newcomer-friendly EPIC in Jenkins core with clear scope rules provided by maintainers. Forked the jenkinsci/jenkins repository and set up this Contribution README. Will identify specific target module and set up local development environment in Week 2.
+
+### Week 2 Progress
+Identified specific target file `systemInfo.jelly`. Fixed directly via GitHub web interface on branch `fix-issue-21944-slave-terminology`. Ready to open PR.
 
 ### Code Changes
 
